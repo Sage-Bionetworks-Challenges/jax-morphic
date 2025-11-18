@@ -1,18 +1,21 @@
 # MorPhiC DREAM Challenge Evaluation
 
-Repository for the [MorPhiC DREAM Challenge](https://www.synapse.org/morphic_dream),
-where the main evaluation workflow steps are defined in `workflow.cwl`.
+Repository containing the technical infrastructure and code for the [MorPhiC DREAM Challenge]
 
-The challenge's infrastructure is powered by the [SynapseWorkflowOrchestrator]
-orchestration tool, which continuously monitors the challenge for new submission
-to evaluate.
+The challenge infrastructure is powered by the [SynapseWorkflowOrchestrator]
+orchestration tool, which continuously monitors the challenge for new submissions,
+automatically processing and evaluating them using the steps defined in `workflow.cwl`.
+
+Evaluation and scoring scripts are provided in the `evaluation` folder.
 
 ## Evaluation Overview
 
 _more details coming soon_
 
-## Baseline Models
+## Baseline GRN Models
 
 See: https://gitlab.com/jaxcomp/tutorial_dream_challenge/-/tree/main?ref_type=heads
 
+
+[MorPhiC DREAM Challenge]: https://www.synapse.org/morphic_dream
 [SynapseWorkflowOrchestrator]: https://github.com/Sage-Bionetworks/SynapseWorkflowOrchestrator
