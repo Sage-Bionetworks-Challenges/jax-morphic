@@ -6,7 +6,17 @@ The challenge infrastructure is powered by the [SynapseWorkflowOrchestrator]
 orchestration tool, which continuously monitors the challenge for new submissions,
 automatically processing and evaluating them using the steps defined in `workflow.cwl`.
 
-Evaluation and scoring scripts are provided in the `evaluation` folder.
+### Folder structure
+
+```
+jax-morphic
+├── evaluation      // core scoring scripts and final metric calculation logic
+├── README.md
+├── scripts         // scripts called by the individual CWL scripts
+├── steps           // individual CWL scripts (called by the main workflow CWLs)
+└── workflow.cwl    // CWL workflow for evaluating Leaderboard Round submissions
+
+```
 
 ## Evaluation Overview
 
