@@ -1,4 +1,4 @@
-# MorPhiC DREAM Challenge Evaluation
+# MorPhiC DREAM Challenge
 
 Repository containing the technical infrastructure and code for the [MorPhiC DREAM Challenge]
 
