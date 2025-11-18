@@ -10,11 +10,11 @@ automatically processing and evaluating them using the steps defined in `workflo
 
 ```
 jax-morphic
-├── evaluation      // core scoring scripts and final metric calculation logic
+├── evaluation      // core scoring and validation scripts
 ├── README.md
 ├── scripts         // scripts called by the individual CWL scripts
-├── steps           // individual CWL scripts (called by the main workflow CWLs)
-└── workflow.cwl    // CWL workflow for evaluating Leaderboard Round submissions
+├── steps           // individual CWL scripts (called by the main workflow CWL)
+└── workflow.cwl    // CWL workflow for evaluating submissions
 
 ```
 
