@@ -21,6 +21,35 @@ DEBUG = True  # For testing locally. Set to False for final run to avoid saving 
 Z_SCORE_CUTOFF = 2.0  # Arbitrary cutoff for filtering GRNBoost2 edges by importance
 
 
+def setup_args():
+    parser = argparse.ArgumentParser(
+        description="Run GRN inference from single-cell input files."
+    )
+    parser.add_argument(
+        "--input_dir",
+        default="/input",
+        help="Path to directory containing input files",
+    )
+    parser.add_argument(
+        "--output_dir",
+        default="/output",
+        help="Path to directory where predictions.csv is written",
+    )
+    parser.add_argument(
+        "--nthreads",
+        type=int,
+        default=8,
+        help="Number of workers for GRNBoost2",
+    )
+    parser.add_argument(
+        "--n_feats",
+        type=int,
+        default=10_000,
+        help="Number of top-variance genes to keep",
+    )
+    return parser.parse_args()
+
+
 def load_data(
     input_dir: Path,
 ) -> tuple[sc.AnnData, list[str]]:
@@ -155,51 +184,22 @@ def run_scenic(
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Run GRN inference from single-cell input files."
-    )
-    parser.add_argument(
-        "--input_dir",
-        default="/input",
-        help="Path to directory containing input files",
-    )
-    parser.add_argument(
-        "--output_dir",
-        default="/output",
-        help="Path to directory where predictions.csv is written",
-    )
-    parser.add_argument(
-        "--nthreads",
-        type=int,
-        default=8,
-        help="Number of workers for GRNBoost2",
-    )
-    parser.add_argument(
-        "--n_feats",
-        type=int,
-        default=10_000,
-        help="Number of top-variance genes to keep",
-    )
-    args = parser.parse_args()
-
+    args = setup_args()
     input_dir = Path(args.input_dir)
     output_dir = Path(args.output_dir)
-    nthreads = args.nthreads
-    n_feats = args.n_feats
-    output_dir = Path(output_dir)
 
     print("\n--- Step 1: Load data ---")
     adata, tf_names = load_data(input_dir)
 
     print("\n--- Step 2: Preprocess ---")
-    adata, gene_names, tfs = preprocess(adata, tf_names, n_feats)
+    adata, gene_names, tfs = preprocess(adata, tf_names, args.n_feats)
 
     print("\n--- Step 3: GRNBoost2 (per cell type) ---")
     adj_by_ct = run_grnboost2(
         adata,
         gene_names,
         tfs,
-        nthreads,
+        args.nthreads,
         output_dir / "grnboost2",
     )
 
@@ -207,8 +207,8 @@ def main():
     predictions = run_scenic(adata, gene_names, adj_by_ct, input_dir)
 
     print(f"\n--- Step 5: Output results ---")
+    print(f"Saving {len(predictions)} edges to predictions.csv...")
     predictions.to_csv(output_dir / "predictions.csv", index=False)
-    print(f"Saved {len(predictions)} edges to predictions.csv.")
 
     print(f"\n--- Inference done ---")
 
