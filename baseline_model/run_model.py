@@ -110,7 +110,13 @@ def run_grnboost2(
     if DEBUG:
         grn_dir.mkdir(parents=True, exist_ok=True)
 
-    client = Client(LocalCluster(n_workers=nthreads, threads_per_worker=1))
+    client = Client(
+        LocalCluster(
+            n_workers=nthreads,
+            threads_per_worker=1,
+            memory_limit="4GB",  # To prevent OOM errors. Adjust as needed based on available resources.
+        )
+    )
     try:
         for cell_type in cell_types:
             mask = adata.obs["Labels2"].astype(str) == cell_type
