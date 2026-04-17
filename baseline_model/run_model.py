@@ -18,13 +18,11 @@ from pyscenic.prune import df2regulons, prune2df
 from pyscenic.utils import modules_from_adjacencies
 
 DEBUG = True  # For testing locally. Set to False for final run to avoid saving large intermediate files.
-Z_SCORE_CUTOFF = 2.0  # Arbitrary cutoff for filtering GRNBoost2 edges by importance
+Z_SCORE_CUTOFF = 2.0  # Threshold for filtering GRNBoost2 edges by z-score of importance scores (higher = more stringent).
 
 
 def setup_args():
-    parser = argparse.ArgumentParser(
-        description="Run GRN inference from single-cell input files."
-    )
+    parser = argparse.ArgumentParser()
     parser.add_argument(
         "--input_dir",
         default="/input",
@@ -127,7 +125,7 @@ def run_grnboost2(
             adj = adj[adj["importance"] > cutoff]
 
             if DEBUG:
-                adj.to_csv(grn_dir / f"{cell_type}.grn.tsv.gz", sep="  ", index=False)
+                adj.to_csv(grn_dir / f"{cell_type}.grn.tsv.gz", sep="\t", index=False)
             adj_by_ct[cell_type] = adj
     finally:
         client.close()
