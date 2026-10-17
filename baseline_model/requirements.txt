@@ -9,4 +9,4 @@ scanpy==1.9.3
 arboreto==0.1.6
 ctxcore==0.2.0
 pyscenic==0.12.1
-distributed==2023.3.2
+distributed==2026.1.0
