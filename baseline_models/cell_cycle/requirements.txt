@@ -1,0 +1,4 @@
+setuptools==78.1.1
+numpy==1.23.5
+pandas==1.5.3
+mygene==3.2.2

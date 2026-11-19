@@ -29,7 +29,7 @@ def setup_args():
     parser.add_argument(
         "--output_dir",
         default="/output",
-        help="Path to directory where predictions.csv is written",
+        help="Path to directory where predictions.tsv is written",
     )
     parser.add_argument(
         "--nthreads",
@@ -209,8 +209,8 @@ def main():
     predictions = run_scenic(adata, gene_names, adj_by_ct, input_dir)
 
     print(f"\n--- Step 5: Output results ---")
-    print(f"Saving {len(predictions)} edges to predictions.csv...")
-    predictions.to_csv(output_dir / "predictions.csv", index=False)
+    print(f"Saving {len(predictions)} edges to predictions.tsv...")
+    predictions.to_csv(output_dir / "predictions.tsv", sep="\t", index=False)
 
     print(f"\n--- Inference done ---")
 
