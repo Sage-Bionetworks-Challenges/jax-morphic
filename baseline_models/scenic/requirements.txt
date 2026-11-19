@@ -4,6 +4,7 @@ pandas==1.5.3
 scipy==1.10.1
 h5py==3.8.0
 zarr==2.13.3
+pyarrow==14.0.2
 anndata==0.8.0
 scanpy==1.9.3
 arboreto==0.1.6

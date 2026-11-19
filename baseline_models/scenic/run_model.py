@@ -1,9 +1,7 @@
 """Run GRN inference from single-cell input files.
 
 This script is adapted from @Poirion's GRNBoost2/SCENIC notebook, located
-at https://gitlab.com/jaxcomp/tutorial_dream_challenge. Input files are
-expected in input_dir, and final predictions file should be saved into
-output_dir.
+at https://gitlab.com/jaxcomp/tutorial_dream_challenge.
 """
 
 import argparse

@@ -33,4 +33,4 @@ COPY --chown=user:user run_model.py .
 # overridden at `docker run` time, e.g.:
 #   docker run <image> --nthreads 16 --n-feats 5000
 ENTRYPOINT ["python", "run_model.py"]
-CMD ["--nthreads", "8", "--n-feats", "10000"]
+CMD ["--nthreads", "8", "--n_feats", "10000"]
