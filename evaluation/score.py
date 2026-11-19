@@ -1,73 +1,37 @@
 #!/usr/bin/env python
 
-"""Example scoring script.
+"""Scoring script.
 
-This is a minimal example of how a prediction file can be evaluated
-using built-in Python functions. In this example, "accuracy" is
-computed.
+Converts the submitted predictions TSV to the .tsv.gz format expected by
+the scoring pipeline, then hands it off for scoring.
 
-In order to display the scores (and other results) on Synapse, they
-must be written to a JSON file. This JSON file will then be used to
-annotate the submission (next step in the workflow CWL).
 """
 
 import argparse
-import csv
+import gzip
 import json
+import shutil
 
 
-def read_csv(filepath, delim=",", id_col="id"):
+def compress_to_tsv_gz(filepath, out_path="predictions.tsv.gz"):
+    """Gzip-compress the submitted predictions file to .tsv.gz, as expected
+    by the scoring module.
     """
-    Parses a file and returns a dictionary, where id_col
-    is will be used as the key.
-    """
-    data = {}
-    with open(filepath) as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=delim)
-        try:
-            for row in reader:
-                data[row[id_col]] = row
-        except KeyError:
-            return {}
-    return data
-
-
-def score_accuracy(gt, truth_label, pred, pred_label):
-    """
-    Compute scores of the predictions against the groundtruth/
-    goldstandard.
-    """
-    correct_count = 0
-    total_count = 0
-    for patient_id, predictions in pred.items():
-        if predictions.get(pred_label) == gt.get(patient_id).get(truth_label):
-            correct_count += 1
-        total_count += 1
-    if total_count == 0:
-        return 0
-    return correct_count / total_count
+    with open(filepath, "rb") as f_in, gzip.open(out_path, "wb") as f_out:
+        shutil.copyfileobj(f_in, f_out)
+    return out_path
 
 
 def main():
     """Main function."""
 
-    id_col = "PatientID"
-    pred = read_csv(args.prediction_file, id_col=id_col)
-    if not pred:
-        scores = 0
-        status = "INVALID"
-        errors = f"Cannot be evaluated; {id_col} not found in the prediction file"
-    else:
-        truth = read_csv(args.groundtruth_file, id_col=id_col)
-        status = "SCORED"
-        errors = ""
+    pred_file = compress_to_tsv_gz(args.prediction_file)
 
-        try:
-            scores = score_accuracy(truth, "has_cancer", pred, "probability")
-        except ValueError:
-            scores = 0
-            status = "INVALID"
-            errors = "Cannot be evaluated; error encountered during scoring"
+    # TODO: pass pred_file (and args.groundtruth_file) to the scoring
+    # pipeline.
+    scores = None
+    status = "SCORED"
+    errors = ""
 
     result = {
         "accuracy": scores,
@@ -84,13 +48,13 @@ if __name__ == "__main__":
         "-p",
         "--prediction_file",
         required=True,
-        help="Filepath to prediction CSV",
+        help="Filepath to prediction TSV",
     )
     parser.add_argument(
         "-g",
         "--groundtruth_file",
         required=True,
-        help="Filepath to groundtruth/goldstandard CSV",
+        help="Filepath to groundtruth/goldstandard TSV",
     )
     parser.add_argument(
         "-o",
