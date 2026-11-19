@@ -45,7 +45,7 @@ outputs:
 - id: predictions
   type: File?
   outputBinding:
-    glob: predictions.csv
+    glob: predictions.tsv
 - id: results
   type: File
   outputBinding:
